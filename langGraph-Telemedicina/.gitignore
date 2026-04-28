@@ -1,0 +1,61 @@
+# Entornos virtuales
+venv/
+.venv/
+env/
+.env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Bases de datos locales
+*.db
+*.sqlite
+*.sqlite3
+
+# Datos sensibles
+.env
+.env.local
+.secrets
+*.key
+*.pem
+
+# Archivos de datos locales (opcional - comentar si quieres subir ejemplos)
+datos/*.json
+datos/*.db
+!datos/README.md
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Archivos de respaldo
+*.bak
+*.backup
+*.old
+
+# Ollama (modelos grandes)
+ollama/
+.ollama/
+
+# Archivos temporales
+tmp/
+temp/
+*.tmp
+
+# Cobertura de pruebas
+.coverage
+htmlcov/
+
+# Distribuciones
+dist/
+build/
+*.egg-info/

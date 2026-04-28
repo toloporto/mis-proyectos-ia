@@ -1,0 +1,17 @@
+==================================================
+ESTADÍSTICAS DEL SISTEMA DE TRIAGE
+==================================================
+
+Total de pacientes: 1
+
+Distribución por urgencia:
+  🔵 AZUL: 1 paciente(s)
+
+Edad promedio: 23.0 años
+Paciente más joven: 23 años
+Paciente más adulto: 23 años
+
+Síntomas más frecuentes:
+  dolor de barriga: 1 caso(s)
+
+Exportado el: 28/04/2026 17:34:18
