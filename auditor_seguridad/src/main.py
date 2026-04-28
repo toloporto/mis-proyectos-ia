@@ -7,6 +7,7 @@ sys.path.append(ruta_raiz)
 
 from crewai import Agent, Task, Crew, LLM
 from herramientas.lector import leer_log
+from herramientas.notificador import enviar_alerta # <-- Nueva importación
 
 # 2. Configurar Llama 3.1 (el cerebro experto en herramientas)
 motor_ia = LLM(
@@ -21,7 +22,7 @@ auditor = Agent(
     goal='Analizar registros (logs) en busca de amenazas y resumirlas claramente.',
     backstory='Eres un experto en ciberseguridad. Tu tarea es encontrar ataques de fuerza bruta y advertir sobre IPs maliciosas.',
     llm=motor_ia,
-    tools=[leer_log],
+    tools=[leer_log, enviar_alerta ],
     verbose=True,
     max_iter=3
 )
@@ -37,6 +38,16 @@ tarea_analisis = Task(
     NO uses formato JSON. NO uses herramientas más de una vez.
     ''',
     expected_output='Un reporte en español indicando el tipo de ataque y la IP maliciosa.',
+    agent=auditor
+)
+
+tarea_auditoria = Task(
+    description='''
+    1. Lee el log en datos/registro_servidor.log.
+    2. Si detectas un "ERROR CRÍTICO" o "ATAQUE DE FUERZA BRUTA", usa la herramienta "Enviar Alerta de Seguridad" para avisar al usuario con la IP atacante.
+    3. Redacta el informe final en español indicando que la alerta ha sido enviada.
+    ''',
+    expected_output='Informe detallado del ataque y confirmación de la alerta enviada.',
     agent=auditor
 )
 
