@@ -1,1 +1,249 @@
-<h1>Sistema Multiagente Médico</h1>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Multiagente Médico | IA para Diagnóstico</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        h1 { 
+            color: #2c3e50; 
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .badge-container {
+            margin: 20px 0;
+        }
+        .badge {
+            display: inline-block;
+            padding: 8px 15px;
+            margin: 5px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .badge-python { background: #3776AB; color: white; }
+        .badge-fastapi { background: #009688; color: white; }
+        .badge-langgraph { background: #5B5B5B; color: white; }
+        .badge-ollama { background: #000000; color: white; }
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .agent-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .agent-icon { font-size: 3em; margin-bottom: 10px; }
+        .agent-title { font-size: 1.3em; font-weight: bold; margin: 10px 0; }
+        code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            margin: 10px 5px;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: white;
+            margin-top: 40px;
+        }
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 768px) {
+            .header { padding: 20px; }
+            h1 { font-size: 1.8em; }
+            .grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 Sistema Multiagente Médico</h1>
+            <p>Inteligencia Artificial para Triage, Diagnóstico y Tratamiento</p>
+            <div class="badge-container">
+                <span class="badge badge-python">Python 3.12</span>
+                <span class="badge badge-fastapi">FastAPI</span>
+                <span class="badge badge-langgraph">LangGraph</span>
+                <span class="badge badge-ollama">Ollama</span>
+            </div>
+            <div>
+                <a href="https://github.com/toloporto/mis-proyectos-ia" class="btn">📦 GitHub</a>
+                <a href="https://github.com/toloporto/mis-proyectos-ia/actions" class="btn">⚡ GitHub Actions</a>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="agent-card">
+                <div class="agent-icon">🔴</div>
+                <div class="agent-title">Agente TRIAGE</div>
+                <p>Clasifica el nivel de urgencia médica en LEVE, MODERADO, GRAVE o EMERGENCIA</p>
+            </div>
+            <div class="agent-card">
+                <div class="agent-icon">🩺</div>
+                <div class="agent-title">Agente DIAGNÓSTICO</div>
+                <p>Identifica posibles condiciones médicas basadas en los síntomas</p>
+            </div>
+            <div class="agent-card">
+                <div class="agent-icon">💊</div>
+                <div class="agent-title">Agente TRATAMIENTO</div>
+                <p>Recomienda acciones médicas y señales de alarma</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📋 Descripción del Proyecto</h2>
+            <p>Sistema inteligente que utiliza <strong>LangGraph</strong> para orquestar 3 agentes IA especializados que trabajan en cadena:</p>
+            <ul>
+                <li><strong>1️⃣ TRIAGE</strong> → Clasifica la urgencia</li>
+                <li><strong>2️⃣ DIAGNÓSTICO</strong> → Identifica la condición</li>
+                <li><strong>3️⃣ TRATAMIENTO</strong> → Recomienda acciones</li>
+            </ul>
+            <p>Completamente <strong>gratuito y local</strong> usando Ollama. Sin costes de API, sin internet requerida.</p>
+        </div>
+
+        <div class="card">
+            <h2>🚀 Características Principales</h2>
+            <ul>
+                <li>✅ 3 agentes IA trabajando en cadena con LangGraph</li>
+                <li>✅ API REST profesional con FastAPI</li>
+                <li>✅ Modelos de IA locales con Ollama (phi3, llama3, tinyllama)</li>
+                <li>✅ Caché inteligente para respuestas instantáneas</li>
+                <li>✅ Base de datos SQLite para persistencia</li>
+                <li>✅ Rate limiting y seguridad</li>
+                <li>✅ Interfaz web moderna y responsive</li>
+                <li>✅ Logging profesional con trazabilidad</li>
+                <li>✅ CI/CD con GitHub Actions</li>
+                <li>✅ Despliegue con Docker</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>📦 Instalación Rápida</h2>
+            <pre><code>git clone https://github.com/toloporto/mis-proyectos-ia.git
+cd mis-proyectos-ia
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+ollama pull phi3:latest
+python src/api/api.py</code></pre>
+            <p>Luego abre tu navegador en: <strong>http://localhost:8000/web</strong></p>
+        </div>
+
+        <div class="card">
+            <h2>🔧 API Endpoints</h2>
+            <ul>
+                <li><code>GET /</code> - Información de la API</li>
+                <li><code>POST /consultar</code> - Realizar consulta médica</li>
+                <li><code>GET /estadisticas</code> - Estadísticas del sistema</li>
+                <li><code>GET /consultas</code> - Listar consultas realizadas</li>
+                <li><code>GET /pacientes</code> - Listar pacientes registrados</li>
+                <li><code>GET /web</code> - Interfaz web interactiva</li>
+                <li><code>GET /docs</code> - Documentación Swagger</li>
+                <li><code>GET /health</code> - Health check del sistema</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>📊 Ejemplo de Uso con cURL</h2>
+            <pre><code>curl -X POST http://localhost:8000/consultar \\
+  -H "Content-Type: application/json" \\
+  -d '{"sintomas": "dolor de cabeza", "edad": 30}'</code></pre>
+            <p><strong>Respuesta esperada:</strong></p>
+            <pre><code>{
+  "triage": "MODERADO - Evaluación médica recomendada",
+  "diagnostico": "Posible migraña o cefalea tensional",
+  "tratamiento": "Reposo e hidratación. Consultar si persiste",
+  "nivel_urgencia": "MODERADO"
+}</code></pre>
+        </div>
+
+        <div class="card">
+            <h2>🛠️ Tecnologías Utilizadas</h2>
+            <ul>
+                <li><strong>LangGraph</strong> - Orquestación de agentes IA</li>
+                <li><strong>Ollama</strong> - Modelos de lenguaje locales</li>
+                <li><strong>FastAPI</strong> - Framework web para la API</li>
+                <li><strong>SQLite</strong> - Base de datos local</li>
+                <li><strong>Docker</strong> - Contenedorización</li>
+                <li><strong>GitHub Actions</strong> - CI/CD automatizado</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>📄 MIT License | 🚀 Desarrollado con LangGraph + Ollama + FastAPI</p>
+            <p>
+                <a href="https://github.com/toloporto/mis-proyectos-ia">📦 GitHub</a> | 
+                <a href="https://github.com/toloporto/mis-proyectos-ia/actions">⚡ Actions</a> |
+                <a href="https://github.com/toloporto/mis-proyectos-ia/issues">🐛 Issues</a>
+            </p>
+            <p style="font-size: 12px; margin-top: 20px;">
+                ⚡ Sistema Multiagente Médico v2.0 | CI/CD activado | Despliegue automático
+            </p>
+        </div>
+    </div>
+</body>
+</html>
