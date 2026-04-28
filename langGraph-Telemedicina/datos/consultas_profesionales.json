@@ -1,0 +1,23 @@
+[
+  {
+    "timestamp": "2026-04-28T19:28:05.718170",
+    "sintomas": "dolor de cabeza, mareos y n\u00e1useas",
+    "edad": 23,
+    "nivel_urgencia": "MODERADO",
+    "triage": "\ud83c\udfe5 TRIAGE CL\u00cdNICO:\nTiempo de espera agotado - Consulta m\u00e9dica presencial recomendada",
+    "diagnostico": "\ud83e\ude7a DIAGN\u00d3STICO DIFERENCIAL:\nTiempo de espera agotado - Consulta m\u00e9dica presencial recomendada",
+    "tratamiento": "",
+    "tiempo_segundos": 160.1846044063568,
+    "modelo": "antolin-dev:latest",
+    "version": "2.0-profesional"
+  },
+  {
+    "timestamp": "2026-04-28T19:32:55.433162",
+    "sintomas": "dolor de cabeza, mareos y n\u00e1useas",
+    "edad": 0,
+    "triage": "\ud83c\udfe5 NIVEL: Consulta m\u00e9dica recomendada",
+    "diagnostico": "\ud83e\ude7a Consulta m\u00e9dica recomendada",
+    "tratamiento": "\ud83d\udc8a \u26a0\ufe0f Tiempo agotado - Prioridad: consulta m\u00e9dica",
+    "tiempo": 135.991126537323
+  }
+]

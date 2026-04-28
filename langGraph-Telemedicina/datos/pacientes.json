@@ -1,0 +1,12 @@
+[
+  {
+    "id": "PAC-0001",
+    "nombre": "manolo puca dos",
+    "edad": 23,
+    "sintomas": [
+      "dolor de barriga"
+    ],
+    "urgencia": "🔵 AZUL - LEVE: Seguimiento normal en consulta externa",
+    "fecha_registro": "2026-04-28T17:26:31.888179"
+  }
+]

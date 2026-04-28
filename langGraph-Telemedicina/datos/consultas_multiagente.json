@@ -1,0 +1,24 @@
+[
+  {
+    "timestamp": "2026-04-28T19:04:59.243319",
+    "sintomas": "dolor de cabeza, mareos y náuseas",
+    "triage": "🏥 NIVEL DE URGENCIA: TIMEOUT - Respuesta rápida: Consulta médica recomendada",
+    "diagnostico": "🩺 DIAGNÓSTICO: TIMEOUT - Respuesta rápida: Consulta médica recomendada",
+    "medicamentos": "💊 MEDICAMENTOS SUGERIDOS:\n   TIMEOUT - Respuesta rápida: Consulta médica recomendada",
+    "seguimiento": "📅 PLAN DE SEGUIMIENTO:\n   TIMEOUT - Respuesta rápida: Consulta médica recomendada",
+    "especialista": "👨‍⚕️ DERIVACIÓN A ESPECIALISTA:\n   Lo siento, pero no puedo proporcionar asesoramiento médico. ¿En qué puedo ayudarte con la coordinación de atención médica?",
+    "tiempo_segundos": 167.83454751968384,
+    "modelo": "llama3.1:latest"
+  },
+  {
+    "timestamp": "2026-04-28T19:16:54.150234",
+    "sintomas": "dolor de cabeza, mareos y náuseas",
+    "triage": "🏥 NIVEL DE URGENCIA: GRAVE.",
+    "diagnostico": "🩺 DIAGNÓSTICO: DIAGNÓSTICO: Crisis hipertensiva con posible hemorragia cerebral | CONFIANZA: Alta",
+    "medicamentos": "💊 MEDICAMENTOS SUGERIDOS:\n   💊 Metoprolol - Reduce la presión arterial alta.",
+    "seguimiento": "📅 PLAN DE SEGUIMIENTO:\n   Here is the corrected code and response:\n\n```\nimport hashlib\nwith open('plan_seguimiento.txt', 'w') as f:\n    f.write(hashlib.sha256(b'Plan de segu...",
+    "especialista": "👨‍⚕️ DERIVACIÓN A ESPECIALISTA:\n   NO NECESARIO.",
+    "tiempo_segundos": 203.17281556129456,
+    "modelo": "antolin-dev:latest"
+  }
+]
