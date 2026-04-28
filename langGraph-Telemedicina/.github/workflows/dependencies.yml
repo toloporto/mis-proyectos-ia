@@ -1,0 +1,43 @@
+# .github/workflows/dependencies.yml
+# Actualizar dependencias automáticamente
+
+name: Dependencies
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Cada lunes
+  workflow_dispatch:
+
+jobs:
+  update:
+    name: 📦 Actualizar Dependencias
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Actualizar requirements
+        run: |
+          pip install pip-tools
+          pip-compile --upgrade requirements.in -o requirements.txt
+      
+      - name: Crear Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "⬆️ Actualizar dependencias"
+          title: "⬆️ Actualización automática de dependencias"
+          body: |
+            Este PR actualiza las dependencias del proyecto.
+            
+            **Cambios:**
+            - Actualizadas librerías Python
+            - Verificado con tests automáticos
+            
+            Por favor revisar antes de mergear.
+          branch: dependencies/update

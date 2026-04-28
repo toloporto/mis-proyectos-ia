@@ -1,0 +1,160 @@
+# .github/workflows/ci.yml
+# CI/CD Pipeline para Sistema Multiagente Médico
+
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:  # Permite ejecutar manualmente
+
+jobs:
+  # ============================================
+  # JOB 1: Pruebas y calidad de código
+  # ============================================
+  test:
+    name: 🔍 Tests y Calidad
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+      
+      - name: 📦 Instalar dependencias
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov flake8 black mypy
+      
+      - name: 🔍 Verificar formato con Black
+        run: |
+          black --check src/ --diff
+      
+      - name: 🔍 Verificar estilo con Flake8
+        run: |
+          flake8 src/ --max-line-length=120 --ignore=E203,W503
+      
+      - name: 🔍 Verificar tipos con Mypy
+        run: |
+          mypy src/ --ignore-missing-imports
+      
+      - name: 🧪 Ejecutar tests
+        run: |
+          pytest tests/ -v --cov=src --cov-report=xml --cov-report=term
+      
+      - name: 📊 Subir cobertura a Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+
+  # ============================================
+  # JOB 2: Seguridad y análisis estático
+  # ============================================
+  security:
+    name: 🔒 Seguridad
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+      
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: 📦 Instalar bandit
+        run: pip install bandit
+      
+      - name: 🔍 Escanear vulnerabilidades
+        run: |
+          bandit -r src/ -f json -o bandit-report.json || true
+      
+      - name: 📤 Subir reporte de seguridad
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report
+          path: bandit-report.json
+
+  # ============================================
+  # JOB 3: Construcción de Docker
+  # ============================================
+  build:
+    name: 🐳 Construir Docker
+    runs-on: ubuntu-latest
+    needs: [test, security]
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+      
+      - name: 🐳 Construir imagen Docker
+        run: |
+          docker build -t sistema-medico:latest .
+          docker images
+      
+      - name: 💾 Guardar imagen
+        run: |
+          docker save sistema-medico:latest | gzip > sistema-medico.tar.gz
+      
+      - name: 📤 Subir artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: sistema-medico.tar.gz
+
+  # ============================================
+  # JOB 4: Despliegue (solo en main)
+  # ============================================
+  deploy:
+    name: 🚀 Desplegar
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+      
+      - name: 🔐 Login a Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      
+      - name: 🏷️ Crear tags
+        run: |
+          echo "TAG=$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_ENV
+      
+      - name: 🐳 Construir y subir a Docker Hub
+        run: |
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/sistema-medico:latest .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/sistema-medico:${{ env.TAG }} .
+          docker push ${{ secrets.DOCKER_USERNAME }}/sistema-medico:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/sistema-medico:${{ env.TAG }}
+      
+      - name: 📧 Notificar éxito
+        uses: dawidd6/action-send-mail@v3
+        if: success()
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.MAIL_USERNAME }}
+          password: ${{ secrets.MAIL_PASSWORD }}
+          subject: ✅ Despliegue exitoso - Sistema Médico
+          to: ${{ secrets.MAIL_TO }}
+          from: GitHub Actions
+          body: |
+            El despliegue del Sistema Multiagente Médico se completó exitosamente.
+            
+            Tag: ${{ env.TAG }}
+            Repositorio: ${{ secrets.DOCKER_USERNAME }}/sistema-medico:latest
