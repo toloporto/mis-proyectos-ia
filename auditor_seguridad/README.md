@@ -1,50 +1,29 @@
-# Auditor Seguridad
-====================
+# 🛡️ IA Auditor de Seguridad Híbrido
 
-Sistema automatizado de detección y bloqueo de ataques de fuerza bruta con CrewAI.
+Sistema avanzado de auditoría basado en Agentes de IA (**CrewAI** + **Llama 3.1**) diseñado para monitorizar logs, investigar amenazas en la red y analizar la integridad de archivos sospechosos.
 
-## Introducción
-------------
+## 🚀 Capacidades Actuales
+- **Monitorización de Logs:** Analiza registros de servidor en busca de patrones de ataque (Fuerza Bruta, Errores Críticos).
+- **Investigación de Red:** Ante una IP sospechosa, el agente realiza una búsqueda activa en internet para verificar su reputación.
+- **Análisis de Malware:** Genera huellas digitales (SHA-256) de archivos sospechosos en la zona de cuarentena.
+- **Alertas Proactivas:** Envía notificaciones de escritorio inmediatas al detectar una amenaza confirmada.
 
-El sistema "auditor_seguridad" es un proyecto de ciberseguridad que utiliza la tecnología de inteligencia artificial desarrollada por CrewAI para leer archivos de log locales y detectar posibles ataques de fuerza bruta. Una vez detectado, el sistema bloquea las IP maliciosas para evitar futuros accesos no autorizados.
+## 📁 Estructura del Proyecto
+- `src/main.py`: Cerebro y orquestador del agente.
+- `herramientas/`:
+    - `lector.py`: Acceso al sistema de archivos para lectura de logs.
+    - `notificador.py`: Conexión con el sistema de avisos de Linux.
+    - `buscador.py`: Integración con DuckDuckGo para inteligencia de red.
+    - `analizador_archivos.py`: Generador de hashes para archivos sospechosos.
+- `datos/`: Carpeta de logs de servidor.
+- `buzon_sospechoso/`: Zona de cuarentena para análisis de archivos.
 
-## Características
-------------
+## 🛠️ Requisitos e Instalación
+1. **Ollama:** Tener instalado y corriendo Llama 3.1 (`ollama run llama3.1`).
+2. **Entorno:** `source .venv/bin/activate`
+3. **Librerías:** `pip install crewai duckduckgo-search ddgs libnotify-bin` (este último vía apt).
 
-*   **Automatización**: El sistema se ejecuta de forma automática sin la necesidad de intervención humana.
-*   **Detección de ataques de fuerza bruta**: Utiliza algoritmos avanzados para identificar patrones de acceso no autorizado a sistemas y aplicaciones.
-*   **Bloqueo de IP maliciosas**: Una vez detectada una IP sospechosa, el sistema la bloquea temporal o permanentemente según las configuraciones establecidas.
-
-## Requisitos Previos
-----------------
-
-Para utilizar este sistema es necesario contar con los siguientes requisitos:
-
-*   Python 3.x instalado en el equipo.
-*   Los archivos de log locales deben estar disponibles y accesibles para el sistema.
-*   La cuenta de CrewAI debe estar configurada y activa.
-
-## Uso del Sistema
-----------------
-
-Para utilizar el sistema "auditor_seguridad" sigue estos pasos:
-
-1.  Clona el repositorio en tu equipo local.
-2.  Configura las credenciales de acceso a los archivos de log locales.
-3.  Establece las configuraciones de bloqueo de IP maliciosas según tus necesidades.
-4.  Ejecuta el script principal para iniciar la detección y bloqueo.
-
-## Contribución
-------------
-
-Si deseas contribuir al proyecto, por favor crea una nueva rama con tu nombre y envía un pull request con las modificaciones realizadas. Asegúrate de seguir las convenciones de código y estilo establecidas en el proyecto.
-
-## Licencia
----------
-
-Este proyecto está bajo la licencia [MIT](https://opensource.org/licenses/MIT).
-
-## Autor
-------
-
-*   **Escritor Técnico Senior**: El autor del presente documento es un experto en redacción de manuales para herramientas de ciberseguridad hechas en Python.
+## 🧑‍💻 Uso
+Para iniciar el sistema de defensa:
+```bash
+python3 src/main.py

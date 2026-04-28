@@ -7,54 +7,47 @@ sys.path.append(ruta_raiz)
 
 from crewai import Agent, Task, Crew, LLM
 from herramientas.lector import leer_log
-from herramientas.notificador import enviar_alerta # <-- Nueva importación
+from herramientas.notificador import enviar_alerta 
+from herramientas.buscador import investigar_ip
+from herramientas.analizador_archivos import analizar_archivo 
 
-# 2. Configurar Llama 3.1 (el cerebro experto en herramientas)
+# 2. Configurar Llama 3.1 
 motor_ia = LLM(
     model="ollama/llama3.1",
     base_url="http://localhost:11434",
-    temperature=0.2
+    temperature=0.0
 )
 
 # 3. Nuestro Agente Auditor
 auditor = Agent(
-    role='Auditor de Seguridad Senior',
-    goal='Analizar registros (logs) en busca de amenazas y resumirlas claramente.',
-    backstory='Eres un experto en ciberseguridad. Tu tarea es encontrar ataques de fuerza bruta y advertir sobre IPs maliciosas.',
+    role='Auditor de Seguridad Senior e Investigador de Amenazas',
+    goal='Analizar registros, investigar amenazas híbridas (IPs y archivos) y alertar al sistema.',
+    backstory='Eres un experto en ciberseguridad. Tu tarea es analizar logs, usar inteligencia global para investigar atacantes, verificar firmas de archivos sospechosos y emitir alertas críticas.',
     llm=motor_ia,
-    tools=[leer_log, enviar_alerta ],
+    tools=[leer_log, investigar_ip, analizar_archivo, enviar_alerta],
     verbose=True,
-    max_iter=3
+    max_iter=10
 )
 
-# 4. La Tarea (Definimos la ruta absoluta usando la ruta_raiz que calculamos arriba)
+# 4. La Tarea DEFINITIVA (Fusionada y limpia)
 ruta_del_log = os.path.join(ruta_raiz, 'datos', 'registro_servidor.log')
 
-tarea_analisis = Task(
+tarea_definitiva = Task(
     description=f'''
-    PASO 1: Ejecuta la herramienta "Leer Log" pasándole exactamente esta ruta: {ruta_del_log}
-    PASO 2: Analiza el texto devuelto.
-    PASO 3: Redacta y devuelve inmediatamente un informe de seguridad en ESPAÑOL y en TEXTO PLANO. 
-    NO uses formato JSON. NO uses herramientas más de una vez.
+    PASO 1: Usa "Leer Log" en {ruta_del_log}.
+    PASO 2: Es OBLIGATORIO usar "Investigar IP en Internet" para la IP 185.220.101.44 antes de seguir.
+    PASO 3: Es OBLIGATORIO usar "Analizar Archivo Sospechoso" para la ruta del virus mencionada en el log.
+    PASO 4: Una vez tengas los resultados de ambos análisis, usa "Enviar Alerta de Seguridad".
+    PASO 5: Redacta el informe final detallando qué decía internet de la IP y cuál es el hash del archivo.
     ''',
-    expected_output='Un reporte en español indicando el tipo de ataque y la IP maliciosa.',
-    agent=auditor
-)
-
-tarea_auditoria = Task(
-    description='''
-    1. Lee el log en datos/registro_servidor.log.
-    2. Si detectas un "ERROR CRÍTICO" o "ATAQUE DE FUERZA BRUTA", usa la herramienta "Enviar Alerta de Seguridad" para avisar al usuario con la IP atacante.
-    3. Redacta el informe final en español indicando que la alerta ha sido enviada.
-    ''',
-    expected_output='Informe detallado del ataque y confirmación de la alerta enviada.',
+    expected_output='Informe detallado con IP, Hash del archivo y confirmación de alerta.',
     agent=auditor
 )
 
 # 5. Ejecutar la IA
-equipo = Crew(agents=[auditor], tasks=[tarea_analisis])
+equipo = Crew(agents=[auditor], tasks=[tarea_definitiva])
 
-print("🛡️ Iniciando Auditoría de Seguridad...\n")
+print("🛡️ Iniciando Auditoría de Seguridad Híbrida...\n")
 resultado = equipo.kickoff()
 
 print("\n" + "="*40)
