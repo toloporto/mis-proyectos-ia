@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "edad": 75.0,
+        "presion": 165.0,
+        "dolor": 8.0,
+        "notas_medicas": "Sin notas adicionales.",
+        "analisis_imagen": "50.20% de anomalía",
+        "riesgo_clinico": "Alto",
+        "conceptos_nlp": "notas, adicionales",
+        "urgencia_texto": "Bajo",
+        "veredicto_final": "PRECAUCIÓN: Revisión Manual"
+    }
+]

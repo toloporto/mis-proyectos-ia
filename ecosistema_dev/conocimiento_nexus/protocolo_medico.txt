@@ -1,0 +1,5 @@
+PROTOCOLO DE URGENCIAS CARDIOVASCULARES:
+- Presión Arterial > 140 mmHg: Se considera hipertensión grado 1.
+- Presión Arterial > 160 mmHg: Riesgo ALTO de evento cardiovascular.
+- Dolor en el pecho + Edad > 60 años: Requiere monitorización inmediata y posible derivación a urgencias.
+- Dolor en el pecho nivel > 7: Protocolo de código infarto activo.

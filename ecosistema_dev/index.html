@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nexus AI - Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.5);
+            --bg-deep: #020617;
+            --panel-bg: rgba(15, 23, 42, 0.8);
+            --border: rgba(255, 255, 255, 0.1);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --accent: #c084fc;
+        }
+
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: var(--bg-deep);
+            color: var(--text-main); 
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: 260px;
+            background: rgba(2, 6, 23, 0.95);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .session-list {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .session-item {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .session-item:hover {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: var(--primary);
+        }
+
+        /* --- MAIN TERMINAL --- */
+        .terminal-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+            gap: 20px;
+            background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.05), transparent);
+        }
+
+        .chat-display {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding-right: 10px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 15px;
+            border-radius: 12px;
+            line-height: 1.5;
+            animation: slideIn 0.3s ease;
+            white-space: pre-wrap;
+        }
+
+        .msg-user {
+            align-self: flex-end;
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .msg-nexus {
+            align-self: flex-start;
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .action-box {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(15px);
+        }
+
+        textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            resize: none;
+            outline: none;
+            margin-bottom: 10px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary), var(--accent));
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-new:hover {
+            background: var(--accent);
+            transform: scale(1.02);
+        }
+
+        .session-item {
+            padding: 10px;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            color: var(--text-muted);
+        }
+
+        .session-item:hover {
+            background: rgba(255,255,255,0.05);
+            color: white;
+        }
+
+        .session-item.active {
+            border-color: var(--primary);
+            color: white;
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 0 20px var(--primary-glow);
+            transform: translateY(-2px);
+        }
+
+        /* --- INTEL PANEL --- */
+        .intel-panel {
+            width: 380px;
+            background: rgba(2, 6, 23, 0.95);
+            border-left: 1px solid var(--border);
+            padding: 25px;
+            overflow-y: auto;
+        }
+
+        .intel-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s;
+        }
+
+        .intel-card:hover {
+            border-color: var(--primary);
+            background: rgba(255,255,255,0.05);
+        }
+
+        .intel-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--accent);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .intel-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--text-main);
+        }
+
+        /* --- FORMS --- */
+        #form_medico, #form_financiero {
+            display: none;
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid var(--primary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 5px; }
+        input { background: rgba(0,0,0,0.4); border: 1px solid var(--border); color: white; padding: 10px; border-radius: 6px; width: 100%; box-sizing: border-box; outline: none;}
+        input:focus { border-color: var(--primary); }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">NEXUS COMMAND</div>
+        <button onclick="nuevaConsulta()" class="btn-new" style="width: 100%; margin-bottom: 20px; background: rgba(99, 102, 241, 0.2); border: 1px solid var(--primary); color: white; padding: 10px; border-radius: 8px; cursor: pointer;">＋ NUEVA CONSULTA</button>
+        <div class="session-list" id="sessionList">
+            <!-- Cargado dinámicamente -->
+        </div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: auto;">SISTEMA NEXUS v2.0</div>
+    </aside>
+
+    <!-- MAIN TERMINAL -->
+    <main class="terminal-container">
+        <div class="chat-display" id="chatDisplay">
+            <div class="message msg-nexus">
+                <strong>[SISTEMA NEXUS ONLINE]</strong>
+                Bienvenido al Centro de Mando. Todos los agentes (Médico, Financiero, DL/ML) están sincronizados. Inicia una consulta para activar los monitores de inteligencia en tiempo real.
+            </div>
+        </div>
+
+        <!-- FORMULARIOS -->
+        <div id="form_medico">
+            <h4 style="margin: 0 0 15px 0; color: #10b981;">MODULO MÉDICO: ENTRADA DE DATOS</h4>
+            <div class="grid-2">
+                <div><label>Edad</label><input type="number" id="m_edad" placeholder="75"></div>
+                <div><label>Presión</label><input type="number" id="m_presion" placeholder="160"></div>
+            </div>
+            <div class="grid-2">
+                <div><label>Dolor (1-10)</label><input type="number" id="m_dolor" placeholder="8"></div>
+                <div>
+                    <label>Radiografía</label>
+                    <input type="file" id="m_radiografia" onchange="previewImage(this)">
+                    <div id="imagePreview" style="margin-top: 10px; display: none; border: 1px solid var(--primary); border-radius: 8px; overflow: hidden;">
+                        <img id="previewImg" src="#" style="width: 100%; height: auto; display: block;">
+                    </div>
+                </div>
+            </div>
+            <button class="btn-primary" onclick="enviarDatosAgente('medico')" style="width:100%">EJECUTAR DIAGNÓSTICO ML/DL</button>
+        </div>
+
+        <div id="form_financiero">
+            <h4 style="margin: 0 0 15px 0; color: #f59e0b;">MODULO FINANCIERO: AUDITORÍA DE RIESGO</h4>
+            <div class="grid-2">
+                <div><label>Ingresos</label><input type="number" id="f_ingresos" placeholder="50"></div>
+                <div><label>Deuda</label><input type="number" id="f_deuda" placeholder="30"></div>
+            </div>
+            <div style="margin-bottom:15px"><label>Edad</label><input type="number" id="f_edad" placeholder="45"></div>
+            <button class="btn-primary" onclick="enviarDatosAgente('financiero')" style="width:100%">INICIAR SCORING BANCARIO</button>
+        </div>
+
+        <!-- ENTRADA DE TEXTO -->
+        <div class="action-box">
+            <textarea id="userInput" rows="2" placeholder="Escribe tu consulta o pregunta de seguimiento..."></textarea>
+            <div class="controls">
+                <div style="font-size: 0.75rem; color: var(--text-muted); display:flex; gap:10px">
+                    <span>STATUS: READY</span>
+                    <span>MEMORIA: ACTIVE</span>
+                </div>
+                <button class="btn-primary" id="btnSend" onclick="consultarOrquestador()">ENVIAR CONSULTA</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- INTEL PANEL -->
+    <section class="intel-panel" id="intelPanel">
+        <h3 style="margin-top:0; font-size: 1rem; color: var(--text-muted);">MONITOR DE INTELIGENCIA</h3>
+        
+        <div class="intel-card">
+            <div class="intel-title">📡 Estado de Red</div>
+            <div class="intel-value" id="globalStatus" style="color: #10b981;">STANDBY</div>
+        </div>
+        
+        <div id="medicalIntel" style="display:none">
+            <div class="intel-card">
+                <div class="intel-title">🩺 Riesgo Biométrico (ML)</div>
+                <div class="intel-value" id="intel_riesgo_clinico">--</div>
+            </div>
+            <div class="intel-card">
+                <div class="intel-title">📸 Análisis Visión (DL)</div>
+                <div class="intel-value" id="intel_anomalia">--</div>
+            </div>
+        </div>
+
+        <div id="financialIntel" style="display:none">
+            <div class="intel-card">
+                <div class="intel-title">💳 Score Crediticio (ML)</div>
+                <div class="intel-value" id="intel_scoring">--</div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        let url_agente_actual = "";
+        let currentSessionId = "sesion_usuario_provisional";
+
+        // Al cargar la página, pedimos las sesiones
+        window.onload = () => {
+            listarSesiones();
+        };
+
+        function previewImage(input) {
+            const preview = document.getElementById('imagePreview');
+            const img = document.getElementById('previewImg');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function listarSesiones() {
+            try {
+                const res = await fetch("http://127.0.0.1:8000/sesiones");
+                const data = await res.json();
+                const list = document.getElementById('sessionList');
+                list.innerHTML = "";
+                
+                data.sesiones.forEach(id => {
+                    const item = document.createElement('div');
+                    item.className = `session-item ${id === currentSessionId ? 'active' : ''}`;
+                    item.innerText = id.includes("nexus_") ? `ID: ${id.substring(14,20)}...` : "● Consulta Base";
+                    item.onclick = () => cargarSesion(id);
+                    list.appendChild(item);
+                });
+            } catch (e) { console.error("Error cargando historial", e); }
+        }
+
+        async function cargarSesion(id) {
+            currentSessionId = id;
+            addMessage(`<em>Cargando memoria de sesión: ${id}...</em>`);
+            
+            try {
+                const res = await fetch(`http://127.0.0.1:8000/cargar_sesion/${id}`);
+                const data = await res.json();
+                
+                // Limpiamos y reconstruimos el chat
+                document.getElementById('chatDisplay').innerHTML = "";
+                data.mensajes.forEach(m => addMessage(m.content, m.role === 'user'));
+                
+                // Actualizamos monitores si había resultados previos
+                if (data.resultados_tecnicos) {
+                    actualizarMonitoresUI(data.resultados_tecnicos);
+                }
+                
+                listarSesiones();
+            } catch (e) { addMessage("Error al recuperar la sesión."); }
+        }
+
+        function nuevaConsulta() {
+            currentSessionId = "nexus_session_" + Math.random().toString(36).substring(7);
+            document.getElementById('chatDisplay').innerHTML = `
+                <div class="message msg-nexus">
+                    <strong>[NUEVA SESIÓN INICIADA]</strong><br>
+                    ID: ${currentSessionId}<br>
+                    Lista para procesar nuevos datos.
+                </div>
+            `;
+            // Ocultar formularios y resetear medidores
+            document.getElementById('form_medico').style.display = 'none';
+            document.getElementById('form_financiero').style.display = 'none';
+            document.getElementById('globalStatus').innerText = "STATUS: READY";
+            listarSesiones();
+        }
+
+        function addMessage(text, isUser = false) {
+            const display = document.getElementById('chatDisplay');
+            const msg = document.createElement('div');
+            msg.className = `message ${isUser ? 'msg-user' : 'msg-nexus'}`;
+            msg.innerHTML = text;
+            display.appendChild(msg);
+            display.scrollTop = display.scrollHeight;
+        }
+
+        // Función auxiliar para no repetir código de actualización de UI
+        function actualizarMonitoresUI(res) {
+            document.getElementById('globalStatus').innerText = "HISTORIAL CARGADO";
+            document.getElementById('globalStatus').style.color = "#10b981";
+            
+            const riesgo_m = res.riesgo_medico || res.riesgo_clinico;
+            if (riesgo_m) {
+                document.getElementById('medicalIntel').style.display = 'block';
+                document.getElementById('intel_riesgo_clinico').innerText = riesgo_m;
+                document.getElementById('intel_anomalia').innerText = res.seguro || "Evaluado";
+            }
+            if (res.riesgo_financiero) {
+                document.getElementById('financialIntel').style.display = 'block';
+                document.getElementById('intel_scoring').innerText = res.riesgo_financiero;
+            }
+        }
+
+        async function consultarOrquestador() {
+            const mensaje = document.getElementById('userInput').value;
+            if (!mensaje) return;
+
+            addMessage(mensaje, true);
+            document.getElementById('userInput').value = "";
+            const btn = document.getElementById('btnSend');
+            btn.innerText = "PROCESANDO...";
+
+            try {
+                const respuesta = await fetch("http://127.0.0.1:8000/orquestar", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        mensaje: mensaje,
+                        session_id: currentSessionId // Pasamos el ID actual
+                    })
+                });
+
+                const datos = await respuesta.json();
+                addMessage(datos.descripcion);
+
+                if (datos.formulario_requerido !== "ninguno") {
+                    url_agente_actual = datos.url_destino;
+                    document.getElementById('form_medico').style.display = 'none';
+                    document.getElementById('form_financiero').style.display = 'none';
+                    document.getElementById(datos.formulario_requerido).style.display = 'block';
+
+                    // AUTO-COMPLETADO NER
+                    if (datos.datos_extraidos) {
+                        const ner = datos.datos_extraidos;
+                        console.log("[NEXUS] Datos NER recibidos:", ner);
+                        if (datos.formulario_requerido === 'form_medico') {
+                            if (ner.edad !== undefined) document.getElementById('m_edad').value = ner.edad;
+                            if (ner.presion !== undefined) document.getElementById('m_presion').value = ner.presion;
+                            if (ner.dolor !== undefined) document.getElementById('m_dolor').value = ner.dolor;
+                        } else if (datos.formulario_requerido === 'form_financiero') {
+                            if (ner.ingresos !== undefined) document.getElementById('f_ingresos').value = ner.ingresos;
+                            if (ner.deuda !== undefined) document.getElementById('f_deuda').value = ner.deuda;
+                            if (ner.edad !== undefined) document.getElementById('f_edad').value = ner.edad;
+                        }
+                    }
+
+                    // ACTUALIZAR MONITORES INSTANTÁNEOS (v4.0)
+                    if (datos.resultados_tecnicos) {
+                        const res = datos.resultados_tecnicos;
+                        document.getElementById('globalStatus').innerText = "LIVE DATA";
+                        document.getElementById('globalStatus').style.color = "#818cf8";
+                        
+                        // Buscamos el riesgo médico en varias posibles llaves por seguridad
+                        const riesgo_m = res.riesgo_medico || res.riesgo_clinico;
+                        if (riesgo_m) {
+                            document.getElementById('medicalIntel').style.display = 'block';
+                            document.getElementById('intel_riesgo_clinico').innerText = riesgo_m;
+                            document.getElementById('intel_anomalia').innerText = res.seguro || "Evaluando...";
+                        }
+                        if (res.riesgo_financiero) {
+                            document.getElementById('financialIntel').style.display = 'block';
+                            document.getElementById('intel_scoring').innerText = res.riesgo_financiero;
+                        }
+                    }
+                }
+                listarSesiones(); // Actualizamos la lista lateral
+            } catch (error) {
+                addMessage("<strong>ERROR:</strong> Enlace con el núcleo interrumpido.");
+            } finally {
+                btn.innerText = "ENVIAR CONSULTA";
+            }
+        }
+
+        async function enviarDatosAgente(tipoAgente) {
+            const formData = new FormData();
+            document.getElementById(tipoAgente === 'medico' ? 'form_medico' : 'form_financiero').style.display = 'none';
+            addMessage(`<em>Ejecutando protocolos de ${tipoAgente}...</em>`);
+
+            if (tipoAgente === 'medico') {
+                formData.append("edad", document.getElementById('m_edad').value);
+                formData.append("presion", document.getElementById('m_presion').value);
+                formData.append("dolor", document.getElementById('m_dolor').value);
+                const archivo = document.getElementById('m_radiografia').files[0];
+                if(archivo) formData.append("radiografia", archivo);
+            } else {
+                formData.append("ingresos", document.getElementById('f_ingresos').value);
+                formData.append("deuda", document.getElementById('f_deuda').value);
+                formData.append("edad", document.getElementById('f_edad').value);
+            }
+
+            try {
+                const respuesta = await fetch(url_agente_actual, {
+                    method: "POST",
+                    body: formData
+                });
+
+                const datos = await respuesta.json();
+                addMessage(datos.veredicto_final);
+
+                // ACTUALIZAR PANEL DE INTELIGENCIA PERMANENTE
+                document.getElementById('globalStatus').innerText = "LIVE DATA";
+                document.getElementById('globalStatus').style.color = "#818cf8";
+                
+                if (tipoAgente === 'medico') {
+                    document.getElementById('medicalIntel').style.display = 'block';
+                    document.getElementById('intel_riesgo_clinico').innerText = datos.riesgo_clinico;
+                    document.getElementById('intel_anomalia').innerText = datos.analisis_imagen;
+                } else {
+                    document.getElementById('financialIntel').style.display = 'block';
+                    document.getElementById('intel_scoring').innerText = datos.riesgo_tabular;
+                }
+            } catch (error) {
+                addMessage("<strong>ERROR:</strong> El agente especialista ha fallado.");
+            }
+        }
+    </script>
+</body>
+</html>

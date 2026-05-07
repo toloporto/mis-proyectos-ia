@@ -1,0 +1,277 @@
+/* Ecosistema Universal AI - Estilos Globales */
+body {
+  margin: 0;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #0f1115;
+  color: #e0e0e0;
+}
+
+.layout {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 280px;
+  background-color: #161920;
+  border-right: 1px solid #2a2e38;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  color: #fff;
+  margin-top: 0;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+}
+
+.new-agent-btn {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 30px;
+  transition: background-color 0.2s;
+}
+
+.new-agent-btn:hover {
+  background-color: #4338ca;
+}
+
+.agent-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.agent-list h3 {
+  font-size: 0.9rem;
+  color: #8b949e;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.agent-card {
+  background-color: #1e222b;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.agent-card:hover {
+  border-color: #4f46e5;
+}
+
+.agent-card.selected {
+  background-color: rgba(79, 70, 229, 0.15);
+  border-color: #4f46e5;
+}
+
+.agent-card h4 {
+  margin: 0 0 5px 0;
+  color: #fff;
+}
+
+.agent-card p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #8b949e;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #0f1115;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8b949e;
+}
+
+/* ADMIN PANEL (CREAR AGENTE) */
+.admin-panel {
+  padding: 40px;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.admin-panel h2 {
+  color: #fff;
+  margin-bottom: 30px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  color: #c9d1d9;
+  font-weight: 500;
+}
+
+.form-group input, .form-group textarea {
+  background-color: #161920;
+  border: 1px solid #2a2e38;
+  color: #fff;
+  padding: 12px;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+.save-btn {
+  background-color: #238636;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.save-btn:hover {
+  background-color: #2ea043;
+}
+
+/* CHAT VIEW */
+.chat-view {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-header {
+  padding: 20px 30px;
+  border-bottom: 1px solid #2a2e38;
+}
+
+.chat-header h2 {
+  margin: 0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.badge {
+  background-color: #2a2e38;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: normal;
+  color: #8b949e;
+}
+
+.chat-container {
+  flex: 1;
+  overflow-y: auto;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.message {
+  max-width: 80%;
+  padding: 15px 20px;
+  border-radius: 12px;
+  line-height: 1.5;
+}
+
+.message.user {
+  background-color: #4f46e5;
+  color: #fff;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.message.ia {
+  background-color: #1e222b;
+  border: 1px solid #2a2e38;
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.message strong {
+  display: block;
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+  opacity: 0.8;
+}
+
+.message-text {
+  margin: 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+}
+
+.loading {
+  align-self: flex-start;
+  color: #8b949e;
+  font-style: italic;
+}
+
+.input-area {
+  padding: 20px 30px;
+  border-top: 1px solid #2a2e38;
+  display: flex;
+  gap: 15px;
+}
+
+.input-area input {
+  flex: 1;
+  background-color: #161920;
+  border: 1px solid #2a2e38;
+  color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.input-area input:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+.input-area button {
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  padding: 0 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.input-area button:disabled {
+  background-color: #2a2e38;
+  color: #8b949e;
+  cursor: not-allowed;
+}

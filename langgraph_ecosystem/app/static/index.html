@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Hub | LangGraph Ecosystem</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar lateral -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon"></div>
+                <h1>Nexus Hub</h1>
+            </div>
+            <div class="sidebar-info">
+                <p>Ecosistema Multi-Agente</p>
+                <ul class="agent-list">
+                    <li><span class="status-dot"></span> Supervisor</li>
+                    <li><span class="status-dot"></span> Math Worker</li>
+                    <li><span class="status-dot"></span> File Worker</li>
+                </ul>
+            </div>
+            <div class="session-info">
+                <span>Thread ID:</span>
+                <span id="thread-id-display">default_thread</span>
+            </div>
+        </aside>
+
+        <!-- Área principal de chat -->
+        <main class="chat-container">
+            <header class="chat-header">
+                <h2>Nexus Assistant</h2>
+                <span class="status-badge">Online</span>
+            </header>
+            
+            <div class="messages-area" id="messages-area">
+                <!-- Mensaje de bienvenida -->
+                <div class="message assistant">
+                    <div class="message-avatar">NX</div>
+                    <div class="message-content">
+                        <p>¡Hola! Soy el Supervisor del Ecosistema LangGraph. Puedo ayudarte con matemáticas complejas, gestionar archivos o simplemente conversar. ¿Qué necesitas hoy?</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zona inferior de input -->
+            <div class="input-area">
+                <form id="chat-form">
+                    <div class="input-wrapper">
+                        <textarea id="user-input" placeholder="Escribe tu mensaje aquí..." rows="1"></textarea>
+                        <button type="submit" id="send-btn" aria-label="Enviar mensaje">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+id,edad,presion,dolor,notas_medicas,analisis_imagen,riesgo_clinico,conceptos_nlp,urgencia_texto,veredicto_final
+1,75.0,165.0,8.0,Sin notas adicionales.,50.20% de anomalía,Alto,"notas, adicionales",Bajo,PRECAUCIÓN: Revisión Manual

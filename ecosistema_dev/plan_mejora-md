@@ -1,0 +1,47 @@
+# Plan de Evolución: Ecosistema Nexus v3.0
+
+Este plan detalla la integración de capacidades avanzadas de extracción de datos, conocimiento experto (RAG) y persistencia física en el ecosistema.
+
+## Fase 1: Extracción Inteligente de Parámetros (NER)
+**Objetivo:** Eliminar la fricción en la entrada de datos permitiendo que el LLM extraiga valores clínicos/financieros directamente del lenguaje natural.
+
+### [MODIFY] [grafo_nexus.py](file:///home/toloporto/proyectos/ecosistema_dev/grafo_nexus.py)
+- **Nuevo Nodo: `nodo_extractor`**: Un paso intermedio que analiza el mensaje y extrae un JSON estructurado (ej: `{edad: 75, presion: 160}`).
+- **Actualización de Herramientas**: Las herramientas ahora recibirán estos datos extraídos en lugar de valores hardcodeados.
+
+### [MODIFY] [index.html](file:///home/toloporto/proyectos/ecosistema_dev/index.html)
+- **Auto-completado**: Si el Orquestador devuelve datos ya extraídos, los formularios se rellenarán automáticamente para que el usuario solo tenga que confirmar.
+
+---
+
+## Fase 2: Cerebro RAG (Retreival Augmented Generation)
+**Objetivo:** Proporcionar a los agentes acceso a manuales médicos y leyes financieras reales para evitar alucinaciones.
+
+### [NEW] `conocimiento_nexus/`
+- Directorio para almacenar PDFs y archivos de texto con protocolos (ej: "Manual_Hipertension_AHA.pdf").
+
+### [NEW] `vector_db_manager.py`
+- Script para procesar documentos, crear embeddings y almacenarlos en una base de datos vectorial (ChromaDB o FAISS).
+
+### [MODIFY] [servidor_agente.py](file:///home/toloporto/proyectos/ecosistema_dev/servidor_agente.py)
+- Integración de una herramienta de búsqueda vectorial para que el Agente Médico consulte el manual antes de dar el veredicto.
+
+---
+
+## Fase 3: Persistencia Física (SQLite)
+**Objetivo:** Mantener el historial de consultas incluso después de reiniciar los servidores.
+
+### [MODIFY] [grafo_nexus.py](file:///home/toloporto/proyectos/ecosistema_dev/grafo_nexus.py)
+- Sustitución de `MemorySaver` (RAM) por `SqliteSaver` (Disco).
+- Creación automática del archivo `nexus_memory.db`.
+
+### [MODIFY] [orquestador.py](file:///home/toloporto/proyectos/ecosistema_dev/orquestador.py)
+- Nueva ruta API `/historial` para que la UI pueda consultar todas las sesiones guardadas.
+
+### [MODIFY] [index.html](file:///home/toloporto/proyectos/ecosistema_dev/index.html)
+- Lógica para cargar el historial en la barra lateral (Sidebar) al iniciar la página.
+
+## Plan de Verificación
+1. **Prueba NER:** Escribir "Tengo 40 años y 150 de presión" y verificar que el formulario médico se rellena solo.
+2. **Prueba RAG:** Preguntar sobre un protocolo específico guardado en los PDFs y verificar que Nexus lo cita.
+3. **Prueba Persistencia:** Reiniciar todos los servicios y verificar que la consulta anterior sigue apareciendo en el menú lateral.

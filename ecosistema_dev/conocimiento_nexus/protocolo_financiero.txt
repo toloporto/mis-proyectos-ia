@@ -1,0 +1,4 @@
+CRITERIOS DE SOLVENCIA NEXUS:
+- Riesgo de Impago ALTO: Si la deuda es mayor al 40% de los ingresos mensuales.
+- Perfil No Apto: Clientes con edad > 65 años y deudas activas superiores a 20k sin aval.
+- Interés Preferencial: Se aplica solo a perfiles con score tabular "Normal" y sin alertas de texto.

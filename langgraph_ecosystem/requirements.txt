@@ -1,0 +1,15 @@
+langchain>=0.3.0
+langgraph>=0.2.0
+langchain-ollama>=0.1.0
+langchain-community>=0.3.0
+langsmith>=0.1.0
+langgraph-checkpoint-sqlite>=2.0.0
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+pypdf>=4.0.0  # Para procesar PDFs en RAG
+faiss-cpu>=1.7.0  # Base de datos vectorial eficiente
+torch>=2.0.0
+tensorflow>=2.15.0
+transformers>=4.30.0

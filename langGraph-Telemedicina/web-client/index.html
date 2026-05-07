@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema Multiagente Médico — LangGraph Telemedicina</title>
+  <meta name="description" content="Sistema de IA multiagente para triage, diagnóstico y tratamiento médico con procesamiento paralelo y rutas inteligentes." />
+  <link rel="stylesheet" href="/static/css/styles.css" />
+</head>
+<body>
+
+  <!-- Fondo animado -->
+  <div class="bg-grid"></div>
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <div class="app-wrapper">
+
+    <!-- ========== HEADER ========== -->
+    <header class="header">
+      <div class="header-brand">
+        <div class="header-icon">🏥</div>
+        <div class="header-text">
+          <h1>Sistema Multiagente Médico</h1>
+          <p>LangGraph · Ollama phi3 · Procesamiento Paralelo · IA Local</p>
+        </div>
+      </div>
+      <div class="status-badge">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Verificando...</span>
+      </div>
+    </header>
+
+    <!-- ========== CONTENIDO PRINCIPAL ========== -->
+    <main class="main-content">
+
+      <!-- ── COLUMNA IZQUIERDA: Formulario + Resultados ── -->
+      <div class="left-column">
+
+        <!-- Pipeline visual -->
+        <div class="pipeline-section">
+          <p class="pipeline-title">Flujo de agentes</p>
+          <div class="pipeline">
+            <div class="pipeline-step" id="step-triage">
+              <div class="pipeline-step-icon">🟡</div>
+              <span class="pipeline-step-label">Triage</span>
+            </div>
+            <div class="pipeline-connector" id="conn-1"></div>
+            <div class="pipeline-step" id="step-diagnostico">
+              <div class="pipeline-step-icon">🔵</div>
+              <span class="pipeline-step-label">Diagnóstico</span>
+            </div>
+            <div class="pipeline-connector" id="conn-2"></div>
+            <div class="pipeline-step" id="step-tratamiento">
+              <div class="pipeline-step-icon">🟢</div>
+              <span class="pipeline-step-label">Tratamiento</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulario de consulta -->
+        <div class="form-card">
+          <div class="form-card-title">
+            🩺 <span>Nueva consulta médica</span>
+          </div>
+
+          <form id="consultaForm" novalidate>
+            <div class="form-group">
+              <label for="sintomas">Describe tus síntomas</label>
+              <textarea
+                id="sintomas"
+                name="sintomas"
+                placeholder="Ej: Tengo dolor de cabeza intenso, mareos y náuseas desde hace 2 días. También noto sensibilidad a la luz..."
+                required
+                autocomplete="off"
+              ></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="nombre">Nombre (opcional)</label>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" autocomplete="name" />
+              </div>
+              <div class="form-group">
+                <label for="edad">Edad (opcional)</label>
+                <input type="number" id="edad" name="edad" placeholder="Años" min="0" max="120" />
+              </div>
+            </div>
+
+            <button type="submit" class="btn-consultar" id="btnConsultar">
+              🔍 &nbsp;Consultar al sistema médico IA
+            </button>
+          </form>
+
+          <!-- Error -->
+          <div class="error-card" id="errorCard" role="alert"></div>
+        </div>
+
+        <!-- Estado de carga -->
+        <div class="loading-card" id="loadingCard" role="status" aria-live="polite">
+          <div class="spinner"></div>
+          <div class="loading-text" id="loadingText">🟡 Agente Triage clasificando urgencia...</div>
+          <div class="loading-hint">Ctrl+C no cancela — el procesamiento continúa en el servidor</div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="resultado-section" id="resultadoSection">
+
+          <div id="urgenciaBadge" class="urgencia-badge moderado">⚠️ MODERADO</div>
+
+          <div class="result-cards">
+            <!-- Triage -->
+            <div class="result-card">
+              <div class="result-card-header">
+                <div class="result-card-icon triage">🟡</div>
+                <span class="result-card-title">Triage — Nivel de urgencia</span>
+              </div>
+              <div class="result-card-body" id="triageBody"></div>
+            </div>
+
+            <!-- Diagnóstico -->
+            <div class="result-card">
+              <div class="result-card-header">
+                <div class="result-card-icon diagnostico">🔵</div>
+                <span class="result-card-title">Diagnóstico diferencial</span>
+              </div>
+              <div class="result-card-body" id="diagnosticoBody"></div>
+            </div>
+
+            <!-- Tratamiento -->
+            <div class="result-card">
+              <div class="result-card-header">
+                <div class="result-card-icon tratamiento">🟢</div>
+                <span class="result-card-title">Recomendaciones de tratamiento</span>
+              </div>
+              <div class="result-card-body" id="tratamientoBody"></div>
+            </div>
+          </div>
+
+          <!-- Meta info -->
+          <div class="result-meta" id="resultMeta"></div>
+        </div>
+
+      </div><!-- /left-column -->
+
+      <!-- ── COLUMNA DERECHA: Sidebar ── -->
+      <aside class="sidebar">
+
+        <!-- Estadísticas -->
+        <div class="sidebar-card">
+          <div class="sidebar-title">📊 Estadísticas del sistema</div>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value" id="statTotal">—</span>
+              <span class="stat-label">Consultas</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value" id="statTiempo">—</span>
+              <span class="stat-label">Tiempo medio</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Historial -->
+        <div class="sidebar-card">
+          <div class="sidebar-title">🕘 Consultas recientes</div>
+          <div class="historial-list" id="historialList">
+            <div class="historial-empty">Cargando historial...</div>
+          </div>
+        </div>
+
+        <!-- Info protocolos -->
+        <div class="sidebar-card">
+          <div class="sidebar-title">🗺️ Protocolos activos</div>
+          <div style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.8;">
+            <div>🚨 <strong style="color:#ff6b6b">EMERGENCIA</strong> → Protocolo urgente</div>
+            <div>🔴 <strong style="color:var(--grave)">GRAVE</strong> → Agentes en paralelo</div>
+            <div>⚠️ <strong style="color:var(--moderado)">MODERADO</strong> → Agentes en paralelo</div>
+            <div>✅ <strong style="color:var(--leve)">LEVE</strong> → Protocolo autocuidado</div>
+          </div>
+        </div>
+
+      </aside>
+
+    </main><!-- /main-content -->
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+      <span>⚡ Procesamiento paralelo con LangGraph</span>
+      <span>🔒 IA local — privacidad garantizada</span>
+      <span>🧠 Ollama phi3</span>
+    </footer>
+
+  </div><!-- /app-wrapper -->
+
+  <script src="/static/js/api-service.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
