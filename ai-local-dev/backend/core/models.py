@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, JSON, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, JSON, DateTime, ForeignKey
 from sqlalchemy.sql import func
 from .db import Base
 
@@ -16,3 +16,13 @@ class AgentConfiguration(Base):
     tools_enabled = Column(JSON, default=list) # Ejemplo: ["web_search", "mcp_github"]
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+class AgentDocument(Base):
+    __tablename__ = "agent_documents"
+
+    id = Column(Integer, primary_key=True, index=True)
+    agent_id = Column(Integer, ForeignKey("agents.id"), nullable=False, index=True)
+    filename = Column(String, nullable=False)
+    file_size = Column(Integer, nullable=False)
+    chunk_count = Column(Integer, nullable=False)
+    uploaded_at = Column(DateTime(timezone=True), server_default=func.now())

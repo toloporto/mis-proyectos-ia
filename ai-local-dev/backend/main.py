@@ -1,4 +1,9 @@
-from fastapi import FastAPI, Depends, HTTPException
+# Parche de compatibilidad para versiones mixtas de LangChain
+import langchain
+if not hasattr(langchain, 'verbose'):
+    langchain.verbose = False
+
+from fastapi import FastAPI, Depends, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
@@ -82,3 +87,64 @@ def chat_with_agent(agent_id: int, data: ChatInput, db: Session = Depends(get_db
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Error executing agent: {str(e)}")
+
+
+# --- DOCUMENT ENDPOINTS ---
+
+ALLOWED_TYPES = {"pdf", "docx", "txt"}
+MAX_FILE_SIZE = 20 * 1024 * 1024  # 20 MB
+
+@app.post("/api/v1/agent/{agent_id}/documents", response_model=schemas.DocumentResponse)
+async def upload_document(agent_id: int, file: UploadFile = File(...), db: Session = Depends(get_db)):
+    agent = db.query(models.AgentConfiguration).filter(models.AgentConfiguration.id == agent_id).first()
+    if not agent:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    if not agent.use_rag:
+        raise HTTPException(status_code=400, detail="Este agente no tiene RAG habilitado")
+
+    ext = file.filename.rsplit(".", 1)[-1].lower() if "." in file.filename else ""
+    if ext not in ALLOWED_TYPES:
+        raise HTTPException(status_code=400, detail=f"Tipo no soportado: .{ext}")
+
+    file_bytes = await file.read()
+    if len(file_bytes) > MAX_FILE_SIZE:
+        raise HTTPException(status_code=413, detail="Archivo supera el límite de 20MB")
+
+    try:
+        from tools.rag_retriever import ingest_document
+        chunk_count = ingest_document(file_bytes, file.filename, f"agent_{agent_id}")
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error procesando documento: {str(e)}")
+
+    doc = models.AgentDocument(
+        agent_id=agent_id,
+        filename=file.filename,
+        file_size=len(file_bytes),
+        chunk_count=chunk_count
+    )
+    db.add(doc)
+    db.commit()
+    db.refresh(doc)
+    return doc
+
+
+@app.get("/api/v1/agent/{agent_id}/documents", response_model=List[schemas.DocumentResponse])
+def list_documents(agent_id: int, db: Session = Depends(get_db)):
+    if not db.query(models.AgentConfiguration).filter(models.AgentConfiguration.id == agent_id).first():
+        raise HTTPException(status_code=404, detail="Agent not found")
+    return db.query(models.AgentDocument).filter(models.AgentDocument.agent_id == agent_id).all()
+
+
+@app.delete("/api/v1/agent/{agent_id}/documents/{doc_id}", status_code=204)
+def delete_document(agent_id: int, doc_id: int, db: Session = Depends(get_db)):
+    doc = db.query(models.AgentDocument).filter(
+        models.AgentDocument.id == doc_id,
+        models.AgentDocument.agent_id == agent_id
+    ).first()
+    if not doc:
+        raise HTTPException(status_code=404, detail="Document not found")
+    db.delete(doc)
+    db.commit()
+    return None

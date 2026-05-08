@@ -1,5 +1,5 @@
 from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama
 # TODO: Claude implementation when needed
 from langgraph.graph import StateGraph, END
 from typing import TypedDict, Annotated, Sequence
@@ -30,7 +30,7 @@ def get_llm(config: AgentConfiguration):
             google_api_key=api_key
         )
     elif config.llm_model.startswith("ollama:"):
-        model_name = config.llm_model.split(":")[1]
+        model_name = config.llm_model.split(":", 1)[1]
         return ChatOllama(model=model_name, temperature=config.temperature)
     else:
         # Fallback o genérico
@@ -56,10 +56,12 @@ def create_agent_graph(config: AgentConfiguration):
         response = llm.invoke(system_msg + [(msg.type, msg.content) for msg in messages])
         return {"messages": [response]}
         
-    # TODO: Nodo de RAG (recuperación)
     def rag_node(state: AgentState):
-        # Aquí llamaríamos a Qdrant
-        return {"context": "Contexto simulado desde Qdrant..."}
+        """Recupera contexto real desde Qdrant para este agente."""
+        from tools.rag_retriever import retrieve_context
+        query = state["messages"][-1].content
+        context = retrieve_context(query, f"agent_{state['agent_id']}")
+        return {"context": context}
 
     workflow = StateGraph(AgentState)
     

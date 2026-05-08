@@ -27,3 +27,14 @@ class AgentResponse(AgentBase):
 
     class Config:
         from_attributes = True
+
+class DocumentResponse(BaseModel):
+    id: int
+    agent_id: int
+    filename: str
+    file_size: int
+    chunk_count: int
+    uploaded_at: datetime
+
+    class Config:
+        from_attributes = True
