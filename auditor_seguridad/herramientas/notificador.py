@@ -1,16 +1,15 @@
 from crewai.tools import tool
-import os
+import ctypes
 
 @tool("Enviar Alerta de Seguridad")
 def enviar_alerta(mensaje: str) -> str:
     """
-    Envía una notificación visual al escritorio de Linux y hace un pitido.
+    Envía una notificación visual al escritorio de Windows y hace un pitido.
     Útil cuando se detecta una amenaza crítica que requiere atención inmediata.
     """
-    # Enviar notificación visual al escritorio
-    os.system(f'notify-send "🚨 ALERTA DE SEGURIDAD" "{mensaje}"')
+    print(f"\a") # Sonido de sistema (pitido) en la consola
     
-    # Intentar hacer un sonido de sistema (pitido)
-    os.system('echo -e "\a"') 
+    # MB_ICONINFORMATION = 0x40, MB_OK = 0x0
+    ctypes.windll.user32.MessageBoxW(0, mensaje, "🚨 ALERTA DE SEGURIDAD", 0x40 | 0x0)
     
     return f"Notificación enviada con éxito: {mensaje}"

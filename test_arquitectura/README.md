@@ -1,18 +1,32 @@
-# test_arquitectura
-=====================
+# Proyecto test_arquitectura
+==========================
 
-Bienvenido al proyecto test_arquitectura. A continuación, se presenta una breve descripción de la estructura y contenido del proyecto.
+## Introducción
+------------
 
-### Estructura del Proyecto
+Este proyecto tiene como objetivo demostrar una arquitectura básica de un sistema de software. Se divide en tres carpetas principales para organizar el código, los datos locales y las herramientas utilizadas.
 
-El proyecto test_arquitectura se organiza en tres carpetas principales:
+## Estructura del Proyecto
+------------------------
 
-* **src/**: Contiene el código fuente del proyecto, donde se encuentran los archivos de código en lenguajes como Java, Python o C++.
-* **datos/**: Almacena archivos locales que se utilizan durante el desarrollo y pruebas del proyecto. Estos archivos pueden incluir datos de prueba, configuraciones o otros recursos necesarios para la ejecución del proyecto.
-* **herramientas/**: Contiene utilidades y herramientas auxiliares que se utilizan durante el desarrollo y mantenimiento del proyecto. Estas herramientas pueden incluir scripts, plugins o otros recursos que facilitan el trabajo en el proyecto.
+### src/
+#### Código Fuente
+El directorio `src/` contiene todo el código fuente del proyecto, incluyendo la lógica de negocio, la interfaz gráfica y cualquier otra funcionalidad.
 
-### Información Adicional
+### datos/
+#### Archivos Locales
+El directorio `datos/` almacena archivos locales que son utilizados por el proyecto. Esto puede incluir configuraciones, datos de prueba o cualquier otro tipo de archivo que sea necesario para el funcionamiento del sistema.
 
-Para obtener más información sobre el proyecto test_arquitectura, por favor consulte la documentación adicional disponible en [ruta/documentación](ruta/documentación).
+### herramientas/
+#### Utilidades
+El directorio `herramientas/` contiene utilidades y scripts que se utilizan en el desarrollo y mantenimiento del proyecto. Estos pueden incluir herramientas de depuración, scripts de automatización o cualquier otra herramienta que sea necesaria para facilitar el trabajo.
 
-Esperamos que disfrutes explorando y contribuyendo al proyecto test_arquitectura.
+## Requisitos Previos
+-------------------
+
+Para poder utilizar este proyecto, es necesario tener instalado un entorno de desarrollo adecuado y configurar las dependencias correspondientes. Se recomienda consultar la documentación del lenguaje de programación utilizado y cualquier otra herramienta específica que se requiera.
+
+## Contribución
+-------------
+
+Si deseas contribuir a este proyecto, por favor crea una nueva rama y realiza tus cambios allí. Luego, crea un nuevo commit con un mensaje descriptivo y envía una solicitud de extracción para que podamos revisar tus cambios.

@@ -29,7 +29,7 @@ analista_seguridad = Agent(
 )
 
 # 3. Definición de la Tarea con ruta absoluta
-ruta_log = '/home/toloporto/proyectos/test_arquitectura/datos/reporte_sistema.txt'
+ruta_log = os.path.join(ruta_raiz, 'datos', 'reporte_sistema.txt')
 
 tarea_diagnostico = Task(
     description=f'Usa la herramienta Lector de Archivos para analizar el documento en {ruta_log}. Identifica el error más grave.',

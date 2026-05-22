@@ -3,7 +3,7 @@ from crewai import Agent, Task, Crew, LLM
 
 # 1. Conexión nativa a tu modelo local
 motor_ia = LLM(
-    model="ollama/antolin-dev",
+    model="ollama/llama3.1",
     base_url="http://localhost:11434",
     temperature=0.3
 )

@@ -3,7 +3,7 @@ from crewai import Agent, Task, Crew, Process, LLM
 # 1. Usamos la conexión nativa de CrewAI (¡Adiós LangChain!)
 # El prefijo 'ollama/' es obligatorio para que sepa dónde buscar
 mi_llm = LLM(
-    model="ollama/antolin-dev",
+    model="ollama/llama3.1",
     base_url="http://localhost:11434"
 )
 

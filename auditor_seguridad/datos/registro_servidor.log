@@ -1,0 +1,5 @@
+[2026-05-22 10:14:02] INFO: Servicio web iniciado correctamente.
+[2026-05-22 10:15:33] WARNING: Intento de acceso fallido desde IP 192.168.1.50
+[2026-05-22 10:17:12] CRITICAL: Múltiples intentos de login (Fuerza Bruta) detectados desde IP externa 185.220.101.44.
+[2026-05-22 10:17:15] ERROR: El sistema detectó la subida de un archivo con firma sospechosa. El archivo ha sido puesto en cuarentena en la ruta: buzon_sospechoso/virus.exe
+[2026-05-22 10:18:00] INFO: El administrador ha sido notificado por correo electrónico.

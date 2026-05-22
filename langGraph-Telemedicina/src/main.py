@@ -391,7 +391,7 @@ def main():
         elif opcion == "8":  # Nueva opción de exportar
             opcion_exportar_estadisticas()
         elif opcion == "9":
-            opcion_multiagente_langgraph()
+            opcion_multiagente()
         elif opcion == "0":
             # Guardar antes de salir
             guardar_pacientes(pacientes_registrados)

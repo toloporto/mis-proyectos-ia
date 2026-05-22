@@ -1,7 +1,7 @@
 import os
 import shutil
 
-folder_path = '/home/toloporto/proyectos/multiagente/archivos_desordenados'
+folder_path = os.path.join(os.path.dirname(__file__), 'archivos_desordenados')
 
 files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
 

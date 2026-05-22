@@ -12,7 +12,7 @@ from langgraph.graph import StateGraph, END
 OLLAMA_URL = "http://localhost:11434/api/generate"
 # MODELO = "deepseek-coder:latest"  # Más rápido y menos restricciones
 # Alternativa: "antolin-dev:latest" si deepseek no funciona bien
-MODELO = "antolin-dev:latest"  # Tu modelo personalizado
+MODELO = "llama3.1:latest"  # Tu modelo personalizado
 #MODELO = "llama3.1:latest"  # Más lento pero mejor para medicina
 
 class EstadoMedico(TypedDict):
